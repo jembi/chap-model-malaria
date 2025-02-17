@@ -8,7 +8,6 @@ This repository contains an R-based implementation that:
 - Trains a linear regression model on historical climate and malaria case data
 - Uses lagged effects of climate on disease transmission
 - Predicts future malaria cases based on climate forecasts
-- Works with a single region at a time
 - Incorporates seasonal patterns when sufficient historical data is available
 
 Note: While this model uses epidemiologically relevant time lags, it is primarily meant to demonstrate CHAP integration.
