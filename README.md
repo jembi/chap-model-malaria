@@ -1,16 +1,17 @@
 # CHAP Model: Malaria Prediction
 
-This is a CHAP-compatible forecasting model that predicts malaria cases based on climate data. The model demonstrates a minimalist example of CHAP integration using R, implementing a simple linear regression that learns from rainfall and temperature to predict disease cases in the same month.
+This is a CHAP-compatible forecasting model that predicts malaria cases based on climate data. The model demonstrates CHAP integration using R, implementing a linear regression that learns from current and historical climate patterns to predict disease cases.
 
 ## Overview
 
-This repository contains a basic R-based implementation that:
+This repository contains an R-based implementation that:
 - Trains a linear regression model on historical climate and malaria case data
+- Uses lagged effects of climate on disease transmission
 - Predicts future malaria cases based on climate forecasts
 - Works with a single region at a time
-- Does not consider previous disease or climate data (no lag effects)
+- Incorporates seasonal patterns when sufficient historical data is available
 
-Note: This model is primarily meant to demonstrate CHAP integration rather than provide accurate epidemiological predictions.
+Note: While this model uses epidemiologically relevant time lags, it is primarily meant to demonstrate CHAP integration.
 
 ## Requirements
 
@@ -26,17 +27,19 @@ The training data should be a CSV file with the following columns:
 - `disease_cases`: Number of malaria cases
 - `location`: Location identifier
 
+Note: At least 4 months of historical data is required. For seasonal pattern detection, at least 13 months is recommended.
+
 Example:
 ```
 time_period,rainfall,mean_temperature,disease_cases,location
-2023-05,10,30,200,loc1
-2023-06,2,30,100,loc1
-2023-06,1,35,100,loc1
+2024-01,14,24,130,loc1
+2024-02,16,25,140,loc1
+2024-03,22,26,160,loc1
 ```
 
 ### Future Climate Data
 The future climate data for predictions should be a CSV with:
-- `time_period`: Date in YYYY-MM format
+- `time_period`: Date in YYYY-MM format (must follow directly after training data)
 - `rainfall`: Rainfall measurement
 - `mean_temperature`: Average temperature
 - `location`: Location identifier
@@ -94,11 +97,14 @@ predict_chap("output/model.bin",
 
 ## Model Details
 
-The model implements a simple linear regression that:
-- Uses rainfall and temperature as predictors
-- Predicts disease cases for the same month (no time lag)
+The model implements a linear regression that:
+- Uses immediate effects of rainfall (1-2 month lags)
+- Incorporates longer-term temperature effects (2-3 month lags)
+- Includes yearly seasonality when sufficient data is available (12-month lag)
 - Handles missing values by setting them to 0
 - Outputs predictions in a standardized CHAP-compatible format
+
+The number of months predicted depends on the future climate data provided.
 
 ## Output
 
