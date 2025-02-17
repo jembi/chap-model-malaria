@@ -45,6 +45,10 @@ The future climate data for predictions should be a CSV with:
 
 ## Usage
 
+### Direct R Usage
+
+You can run the model directly in R using [isolated_run.r](isolated_run.r): `Rscript isolated_run.r`
+
 ### Using CHAP
 
 After installing chap-core (see [installation instructions](https://github.com/dhis2-chap/chap-core)), you can run the model through CHAP:
@@ -58,7 +62,7 @@ chap evaluate --model-name /model/path/or/url \
 
 ### Using MLflow Directly
 
-The project can be run using MLflow with two main entry points:
+The project can also be run using MLflow with two main entry points:
 
 1. Training the model:
 ```bash
@@ -76,23 +80,6 @@ mlflow run . -e predict \
     out_file=path/to/predictions.csv
 ```
 
-### Direct R Usage
-
-You can also run the model directly in R using isolated_run.r:
-
-```r
-source("train.r")
-source("predict.r")
-
-# Train the model
-train_chap("input/trainData.csv", "output/model.bin")
-
-# Make predictions
-predict_chap("output/model.bin", 
-            "input/trainData.csv", 
-            "input/futureClimateData.csv", 
-            "output/predictions.csv")
-```
 
 ## Model Details
 
