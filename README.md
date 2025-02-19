@@ -43,8 +43,6 @@ The future climate data for predictions should be a CSV with:
 
 ### 1. Command Line Usage
 
-#### Requirements
-The project uses Docker with the `ivargr/r_inla:latest` image which contains all required R dependencies. Docker must be installed to run this model through CHAP.
 
 #### Direct R Usage
 You can run the model directly in R using [isolated_run.r](isolated_run.r):

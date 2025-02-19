@@ -1,0 +1,6 @@
+.git
+.gitignore
+.Rhistory
+.RData
+.Rproj.user
+output/*.bin 
