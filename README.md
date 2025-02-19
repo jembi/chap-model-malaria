@@ -198,6 +198,38 @@ The model implements a linear regression that:
     └── model.bin      # Trained model file (created after training)
 ```
 
+## Docker Deployment
+
+You can deploy the CHAP Model, with the API exposed, using Docker to ensure a consistent environment across different systems. This section provides instructions on how to build and run the application using Docker.
+
+### Requirements
+Ensure Docker and Docker Compose are installed on your system.
+
+### Building and Running the Application
+1. **Build the Docker Image**:
+   Navigate to the project directory and run the following command to build the Docker image:
+   ```bash
+   docker-compose build
+   ```
+
+2. **Run the Application**:
+   Start the application using Docker Compose:
+   ```bash
+   docker-compose up
+   ```
+   This command will start the application and expose it on port 8000.
+
+3. **Access the API**:
+   Once the application is running, you can access the API at `http://host-ip:8000`.
+
+4. **Stopping the Application**:
+   To stop the application, press `Ctrl+C` if running in the foreground, or use:
+   ```bash
+   docker-compose down
+   ```
+
+This Docker deployment option allows you to easily run the application in a containerized environment, ensuring consistency across different systems.
+
 ## License
 
 This project is licensed under the Mozilla Public License Version 2.0 - see the [LICENSE](LICENSE) file for details.
