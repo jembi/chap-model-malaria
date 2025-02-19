@@ -3,6 +3,10 @@ options(warn=1)
 train_chap <- function(csv_fn, model_fn) {
   df <- read.csv(csv_fn)
   
+  # Calculate mean before creating lag features
+  training_mean <- mean(df$disease_cases, na.rm = TRUE)
+  print(paste("Training data mean:", round(training_mean, 2), "cases"))
+  
   # Create focused lag features
   # Rainfall: 1-2 month lags (immediate effects)
   df$rainfall_lag1 <- c(NA, df$rainfall[-nrow(df)])
@@ -16,8 +20,10 @@ train_chap <- function(csv_fn, model_fn) {
   if(nrow(df) >= 13) {
     df$cases_lag12 <- c(rep(NA, 12), df$disease_cases[-nrow(df):-(nrow(df)-11)])
     use_yearly_lag <- TRUE
+    print("Using seasonal patterns (13+ months of data)")
   } else {
     use_yearly_lag <- FALSE
+    print("Using recent trends only (4-12 months of data)")
   }
   
   # Remove rows with NA due to lagging
@@ -37,7 +43,16 @@ train_chap <- function(csv_fn, model_fn) {
                 temp_lag2 + temp_lag3, data = df)
   }
   
-  saveRDS(model, file=model_fn)
+  print("Model trained successfully")
+  
+  # Save model along with metadata
+  model_info <- list(
+    model = model,
+    use_yearly_lag = use_yearly_lag,
+    training_mean = training_mean
+  )
+  
+  saveRDS(model_info, file=model_fn)
 }
 
 args <- commandArgs(trailingOnly = TRUE)

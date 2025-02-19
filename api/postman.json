@@ -1,0 +1,129 @@
+{
+    "info": {
+        "_postman_id": "8ee0d784-be9e-45e2-b42d-09ff86823d02",
+        "name": "CHAP",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "36465554"
+    },
+    "item": [
+        {
+            "name": "train",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"training_data\": {\n    \"time_period\": [\"2022-01\", \"2022-02\", \"2022-03\", \"2022-04\"],\n    \"rainfall\": [100, 120, 110, 90],\n    \"mean_temperature\": [25, 26, 27, 28],\n    \"disease_cases\": [10, 12, 15, 14]\n  }\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "http://localhost:8000/train",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "train"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "train (csv)",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "training_data",
+                            "type": "file",
+                            "src": "/path/to/training.csv"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "http://localhost:8000/train",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "train"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "predict",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"historic_data\": {\n      \"time_period\": [\"2023-01\", \"2023-02\", \"2023-03\", \"2023-04\"],\n      \"rainfall\": [12, 15, 20, 18],\n      \"mean_temperature\": [24, 25, 26, 27],\n      \"disease_cases\": [120, 130, 150, 180],\n      \"location\": [\"loc1\", \"loc1\", \"loc1\", \"loc1\"]\n    },\n    \"future_data\": {\n      \"time_period\": [\"2023-05\", \"2023-06\"],\n      \"rainfall\": [10, 5],\n      \"mean_temperature\": [28, 29],\n      \"location\": [\"loc1\", \"loc1\"]\n    }\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "http://localhost:8000/predict",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "predict"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "predict (csv)",
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "historic_data",
+                            "type": "file",
+                            "src": "/path/to/history.csv"
+                        },
+                        {
+                            "key": "future_data",
+                            "type": "file",
+                            "src": "/path/to/future.csv"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "http://localhost:8000/predict",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8000",
+                    "path": [
+                        "predict"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ]
+}

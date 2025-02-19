@@ -103,39 +103,64 @@ The server will run on http://localhost:8000
 
 Trains a new model using historical data. Requires at least 4 months of data.
 
-Request body:
-```json
-{
-  "training_data": {
-    "time_period": ["2022-01", "2022-02", "2022-03", "2022-04"],
-    "rainfall": [100, 120, 110, 90],
-    "mean_temperature": [25, 26, 27, 28],
-    "disease_cases": [10, 12, 15, 14]
-  }
-}
+1. JSON payload:
+```bash
+curl -X POST http://localhost:8000/train \
+  -H "Content-Type: application/json" \
+  -d '{
+    "training_data": {
+      "time_period": ["2022-01", "2022-02", "2022-03", "2022-04"],
+      "rainfall": [100, 120, 110, 90],
+      "mean_temperature": [25, 26, 27, 28],
+      "disease_cases": [10, 12, 15, 14],
+      "location": ["loc1", "loc1", "loc1", "loc1"]
+    }
+  }'
+```
+
+2. CSV file upload:
+```bash
+curl -X POST http://localhost:8000/train \
+  -F "training_data=@path/to/training_data.csv"
 ```
 
 ##### Make Predictions
 `POST /predict`
 
-Makes predictions using the trained model. 12+ months of historical data recommended.
+Makes predictions using the trained model. The model adapts to the amount of historical data provided:
+- With 4+ months of data: Uses recent trends and weather patterns
+- With 13+ months of data: Uses seasonal patterns for more accurate long-term predictions
+- Location information required for each data point
 
-Request body:
-```json
-{
-  "historic_data": {
-    "time_period": ["2022-01", "2022-02", "2022-03", "2022-04"],
-    "rainfall": [100, 120, 110, 90],
-    "mean_temperature": [25, 26, 27, 28],
-    "disease_cases": [10, 12, 15, 14]
-  },
-  "future_data": {
-    "time_period": ["2022-05", "2022-06"],
-    "rainfall": [95, 105],
-    "mean_temperature": [29, 30]
-  }
-}
+1. JSON payload example:
+```bash
+curl -X POST http://localhost:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "historic_data": {
+      "time_period": ["2023-01", "2023-02", "2023-03", "2023-04"],
+      "rainfall": [12, 15, 20, 18],
+      "mean_temperature": [24, 25, 26, 27],
+      "disease_cases": [120, 130, 150, 180],
+      "location": ["loc1", "loc1", "loc1", "loc1"]
+    },
+    "future_data": {
+      "time_period": ["2023-05", "2023-06"],
+      "rainfall": [10, 5],
+      "mean_temperature": [28, 29],
+      "location": ["loc1", "loc1"]
+    }
+  }'
 ```
+
+2. CSV file upload:
+```bash
+curl -X POST http://localhost:8000/predict \
+  -F "historic_data=@path/to/historic_data.csv" \
+  -F "future_data=@path/to/future_data.csv"
+```
+
+The CSV files should follow the same data format described in the [Data Format](#data-format) section.
 
 #### API Error Handling
 Errors are returned in the format:
@@ -151,14 +176,15 @@ Common API errors:
 - Not enough historical data (minimum 4 months required)
 - No trained model found
 - NA/null values in the input data
+- Location mismatch between historic and future data
 
 ## Model Details
 
 The model implements a linear regression that:
 - Uses immediate effects of rainfall (1-2 month lags)
 - Incorporates longer-term temperature effects (2-3 month lags)
-- Includes yearly seasonality when sufficient data is available (12-month lag)
-- Handles missing values by setting them to 0
+- Includes seasonal patterns when sufficient historical data is available
+- Adapts to available data length (uses historical averages when needed)
 - Outputs predictions in a standardized CHAP-compatible format
 
 ## Project Structure
