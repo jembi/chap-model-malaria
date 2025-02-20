@@ -237,10 +237,13 @@ function(req) {
     unlink(temp_future)
     unlink(temp_predictions)
     
-    # Return predictions data directly
+    # Return predictions data with time_period
     list(
       status = "success",
-      predictions = predictions$sample_0  # Just return the predictions array
+      predictions = data.frame(
+        time_period = future_data$time_period,
+        predicted_value = predictions$sample_0
+      )
     )
   }, error = function(e) {
     print(paste("Error occurred:", e))
